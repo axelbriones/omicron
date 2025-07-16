@@ -135,4 +135,45 @@
     background: rgba(255, 255, 255, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.2);
   }
+
+  .wpcf7-form-control-wrap {
+    display: block;
+    margin-bottom: 1.5rem;
+  }
+
+  .wpcf7-form-control {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    background-color: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+  }
+
+  .wpcf7-form-control::placeholder {
+    color: #d1d5db;
+  }
+
+  .wpcf7-form-control:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #ec4899;
+    border-color: transparent;
+  }
+
+  .wpcf7-submit {
+    width: 100%;
+    background-image: linear-gradient(to right, #ec4899, #8b5cf6);
+    color: white;
+    font-weight: 600;
+    padding: 1rem 1.5rem;
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+    transform: perspective(1px) translateZ(0);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+
+  .wpcf7-submit:hover {
+    background-image: linear-gradient(to right, #db2777, #7c3aed);
+    transform: scale(1.05);
+  }
 }
