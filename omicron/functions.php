@@ -132,6 +132,7 @@ function omicron_scripts() {
     wp_enqueue_style( 'aos-style', get_template_directory_uri() . '/node_modules/aos/dist/aos.css', array(), '2.3.4', 'all' );
 
     wp_enqueue_script( 'aos-script', get_template_directory_uri() . '/node_modules/aos/dist/aos.js', array(), '2.3.4', true );
+    wp_enqueue_script( 'omicron-main-script', get_template_directory_uri() . '/assets/js/main.js', array(), '1.0.0', true );
     wp_add_inline_script( 'aos-script', 'AOS.init();' );
 
     if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
@@ -139,4 +140,24 @@ function omicron_scripts() {
     }
 }
 add_action( 'wp_enqueue_scripts', 'omicron_scripts' );
+
+class Omicron_Nav_Walker extends Walker_Nav_Menu {
+    function start_el( &$output, $item, $depth = 0, $args = null, $id = 0 ) {
+        $output .= "<a href='" . $item->url . "' class='text-gray-900 hover:bg-gradient-to-r hover:from-blue-600 hover:to-purple-600 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-300'>" . $item->title;
+    }
+
+    function end_el( &$output, $item, $depth = 0, $args = null ) {
+        $output .= "</a>";
+    }
+}
+
+class Omicron_Mobile_Nav_Walker extends Walker_Nav_Menu {
+    function start_el( &$output, $item, $depth = 0, $args = null, $id = 0 ) {
+        $output .= "<a href='" . $item->url . "' class='block text-gray-900 hover:bg-gradient-to-r hover:from-blue-600 hover:to-purple-600 hover:text-white px-3 py-2 rounded-md text-base font-medium transition-all duration-300'>" . $item->title;
+    }
+
+    function end_el( &$output, $item, $depth = 0, $args = null ) {
+        $output .= "</a>";
+    }
+}
 ?>
