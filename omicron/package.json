@@ -1,0 +1,24 @@
+{
+  "name": "omicron",
+  "version": "1.0.0",
+  "description": "Tema para el sitio web de Laboratorio Omicron",
+  "main": "index.js",
+  "scripts": {
+    "dev": "npx tailwindcss -i ./assets/css/src/style.css -o ./assets/css/dist/style.css --watch",
+    "build": "npx tailwindcss -i ./assets/css/src/style.css -o ./assets/css/dist/style.css --minify"
+  },
+  "keywords": [
+    "wordpress",
+    "theme",
+    "tailwind"
+  ],
+  "author": "Byron Briones",
+  "license": "ISC",
+  "devDependencies": {
+    "aos": "^2.3.4",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.11",
+    "tailwindcss-animate": "^1.0.7"
+  }
+}
