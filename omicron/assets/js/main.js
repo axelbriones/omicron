@@ -53,4 +53,46 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('products-container').innerHTML = result;
         });
     }
+
+    const searchInput = document.getElementById('product-search');
+    if (searchInput) {
+        searchInput.addEventListener('keyup', function() {
+            const searchTerm = this.value.toLowerCase();
+            const tableRows = document.querySelectorAll('#products-table tbody tr');
+            tableRows.forEach(row => {
+                const productName = row.querySelector('td:first-child').textContent.toLowerCase();
+                if (productName.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+    }
+
+    const sortableHeaders = document.querySelectorAll('#products-table th[data-sort]');
+    if (sortableHeaders.length > 0) {
+        sortableHeaders.forEach(header => {
+            header.addEventListener('click', function() {
+                const sortField = this.dataset.sort;
+                const table = this.closest('table');
+                const tbody = table.querySelector('tbody');
+                const rows = Array.from(tbody.querySelectorAll('tr'));
+                const sortDirection = this.dataset.sortDirection === 'asc' ? 'desc' : 'asc';
+                this.dataset.sortDirection = sortDirection;
+
+                rows.sort((a, b) => {
+                    const aValue = a.querySelector(`td:nth-child(${this.cellIndex + 1})`).textContent.trim();
+                    const bValue = b.querySelector(`td:nth-child(${this.cellIndex + 1})`).textContent.trim();
+                    if (sortDirection === 'asc') {
+                        return aValue.localeCompare(bValue);
+                    } else {
+                        return bValue.localeCompare(aValue);
+                    }
+                });
+
+                rows.forEach(row => tbody.appendChild(row));
+            });
+        });
+    }
 });
