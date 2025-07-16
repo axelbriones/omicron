@@ -139,12 +139,69 @@ function omicron_scripts() {
         wp_enqueue_script( 'comment-reply' );
     }
 
-    if ( is_page_template( 'template-products.php' ) ) {
+    if ( is_page_template( 'template-products.php' ) || is_page_template( 'template-products-alt.php' ) || is_page_template( 'template-products-alt-2.php' ) ) {
         wp_enqueue_script( 'embla-carousel', 'https://unpkg.com/embla-carousel/embla-carousel.umd.js', array(), '8.0.0', true );
         wp_enqueue_script( 'embla-carousel-autoplay', 'https://unpkg.com/embla-carousel-autoplay/embla-carousel-autoplay.umd.js', array('embla-carousel'), '8.0.0', true );
     }
+
+    if ( is_page_template( 'template-vademecum.php' ) ) {
+        wp_localize_script( 'omicron-main-script', 'omicron_ajax', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
+    }
 }
 add_action( 'wp_enqueue_scripts', 'omicron_scripts' );
+
+function filter_products_callback() {
+    $category = $_POST['category'];
+    $presentations = isset($_POST['presentations']) ? $_POST['presentations'] : array();
+    $sale_conditions = isset($_POST['sale_conditions']) ? $_POST['sale_conditions'] : array();
+
+    $tax_query = array('relation' => 'AND');
+
+    if ( ! empty( $category ) ) {
+        $tax_query[] = array(
+            'taxonomy' => 'product_cat',
+            'field'    => 'slug',
+            'terms'    => $category,
+        );
+    }
+
+    if ( ! empty( $presentations ) ) {
+        $tax_query[] = array(
+            'taxonomy' => 'pa_presentacion',
+            'field'    => 'slug',
+            'terms'    => $presentations,
+        );
+    }
+
+    if ( ! empty( $sale_conditions ) ) {
+        $tax_query[] = array(
+            'taxonomy' => 'pa_condicion-de-venta',
+            'field'    => 'slug',
+            'terms'    => $sale_conditions,
+        );
+    }
+
+    $args = array(
+        'post_type'      => 'product',
+        'posts_per_page' => -1,
+        'tax_query'      => $tax_query,
+    );
+
+    $loop = new WP_Query( $args );
+
+    if ( $loop->have_posts() ) {
+        while ( $loop->have_posts() ) : $loop->the_post();
+            wc_get_template_part( 'content', 'product' );
+        endwhile;
+    } else {
+        echo __( 'No products found' );
+    }
+
+    wp_reset_postdata();
+    die();
+}
+add_action( 'wp_ajax_filter_products', 'filter_products_callback' );
+add_action( 'wp_ajax_nopriv_filter_products', 'filter_products_callback' );
 
 class Omicron_Nav_Walker extends Walker_Nav_Menu {
     function start_el( &$output, $item, $depth = 0, $args = null, $id = 0 ) {

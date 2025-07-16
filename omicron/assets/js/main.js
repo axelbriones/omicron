@@ -18,4 +18,39 @@ document.addEventListener('DOMContentLoaded', function() {
             EmblaCarouselAutoplay({ delay: 3000 })
         ]);
     }
+
+    const productFilters = document.querySelectorAll('.product-filter, #product-category-filter');
+    if (productFilters.length > 0) {
+        productFilters.forEach(filter => {
+            filter.addEventListener('change', function() {
+                loadProducts();
+            });
+        });
+        loadProducts();
+    }
+
+    function loadProducts() {
+        const category = document.getElementById('product-category-filter').value;
+        const presentations = Array.from(document.querySelectorAll('.product-filter[id^="pa_presentacion"]:checked')).map(el => el.value);
+        const saleConditions = Array.from(document.querySelectorAll('.product-filter[id^="pa_condicion-de-venta"]:checked')).map(el => el.value);
+
+        const data = {
+            'action': 'filter_products',
+            'category': category,
+            'presentations': presentations,
+            'sale_conditions': saleConditions,
+        };
+
+        fetch(omicron_ajax.ajax_url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams(data),
+        })
+        .then(response => response.text())
+        .then(result => {
+            document.getElementById('products-container').innerHTML = result;
+        });
+    }
 });
